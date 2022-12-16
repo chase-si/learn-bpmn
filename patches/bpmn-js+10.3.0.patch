@@ -1,0 +1,21 @@
+diff --git a/node_modules/bpmn-js/lib/features/auto-place/BpmnAutoPlaceUtil.js b/node_modules/bpmn-js/lib/features/auto-place/BpmnAutoPlaceUtil.js
+index c815eee..d13e9d8 100644
+--- a/node_modules/bpmn-js/lib/features/auto-place/BpmnAutoPlaceUtil.js
++++ b/node_modules/bpmn-js/lib/features/auto-place/BpmnAutoPlaceUtil.js
+@@ -65,9 +65,14 @@ export function getFlowNodePosition(source, element) {
+     }
+   }
+ 
++  // var position = {
++  //   x: sourceTrbl.right + horizontalDistance + element.width / 2,
++  //   y: sourceMid.y + getVerticalDistance(orientation, minDistance)
++  // };
++  // chase change: add to bottom position
+   var position = {
+-    x: sourceTrbl.right + horizontalDistance + element.width / 2,
+-    y: sourceMid.y + getVerticalDistance(orientation, minDistance)
++    x: sourceMid.x + getVerticalDistance(orientation, minDistance),
++    y: sourceTrbl.bottom + horizontalDistance + element.height / 2,
+   };
+ 
+   var nextPositionDirection = {
