@@ -1,6 +1,7 @@
 # bpnm 学习笔记(4)
 自定义添加组合组件:
-添加类似一个自定义条件组件, 自动连着俩subProcess框
+代码实现contextPad自动添加的效果;
+添加类似一个自定义条件组件, 自动连一个subProcess框;
 
 ## 学会调用自身扩展包
 首先还是这个modeler
@@ -196,17 +197,49 @@ const autoPlace = bpmnModeler.get('autoPlace')
 
 3. 创建一个新的task流程组件, 找到我们1里的开始节点, 自动连接上 
 ```
-...
 
-const newTaskShape = elementFactory.createShape({ type: 'bpmn:Task' })
-const allShapes = elementRegistry.getAll()
-// allShapes = [root, shape] 分别是根节点和我们的开始组件
+const newTaskShape = elementFactory.createShape({ type: 'bpmn:ServiceTask' })
+const [rootShape, startShape] = elementRegistry.getAll()
 
-const startShape = allShapes[1]
 autoPlace.append(startShape, newTaskShape)
-
 ````
 
-## 阅读借鉴的相关代码
-`/bpmn-js/lib/features/context-pad/ContextPadProvider.js`
+以上阅读的相关代码可见`/bpmn-js/lib/features/context-pad/ContextPadProvider.js`
+demo的代码例子`file: /src/demos/modelerAutoAdd`
 
+## 自定义条件组件实现demo
+在学习笔记(2)里讲了如何创建一个自定义组件, 这里我们基于`bpmn:ParallelGateway`这个基础组件, 创建一个自定义的条件组件
+```
+export const ConditionPalett = {
+  key: 'create.condition',
+  type: 'bpmn:ParallelGateway',
+  group: 'gateway',
+  iconClassName: 'bpmn-icon-gateway-parallel',
+  title: '条件组件',
+  show: true
+}
+```
+之后把我们的自定义条件组件丢到左侧菜单栏, 监听`shape.added`的事件
+
+```
+...
+// 自定义的条件组件, 自动带一个subProcess出现
+    if (target.type === 'bpmn:ParallelGateway') {
+        const elementFactory = modeler.get('elementFactory')
+        const elementRegistry = modeler.get('elementRegistry')
+        const autoPlace = modeler.get('autoPlace')
+        
+        const newTaskShape = elementFactory.createShape({
+            type: 'bpmn:SubProcess',
+            isExpanded: true,
+            rcProperties: [{
+                key: 'name',
+                value: 'true',
+            }]
+        })
+        autoPlace.append(target, newTaskShape)
+    }
+...
+```
+
+demo的代码例子`file: /src/demos/modelerAutoAdd`

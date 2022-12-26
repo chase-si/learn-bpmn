@@ -4,8 +4,8 @@ import Viewer from 'bpmn-js/lib/Viewer'
 
 import getPalette from '../../custom/newPalettProvider'
 import getContextPad from '../../custom/newContextPad'
-import { bindShapeAdded, bindImportDone } from '../../utils/utils'
-import { XieBoPalett } from './constants'
+import { bindShapeAdded, bindImportDone } from '../../utils/eventBind'
+import { XieBoPalett, ConditionPalett } from './constants'
 import { Container, PropertiesPanel } from './style'
 
 // 基于modeler的模板, 显示编辑property panel
@@ -17,7 +17,9 @@ const ReactBpmn = (props) => {
         onError = (res) => console.log('error log', res),
         onShown = (res) => console.log('render log', res),
     } = props
+    const [xmlState, setXmlState] = useState(diagramXML)
     const bpmnModeler = useRef(null)
+    const containerDom = useRef(null)
     const canvasDom = useRef(null)
 
     const eleRef = useRef(null) // 内存放一个当前编辑的element
@@ -35,7 +37,7 @@ const ReactBpmn = (props) => {
     const init = async () => {
         try {
             const newModelingModules = [...BpmnModeler.prototype._modelingModules]
-            newModelingModules.splice(19, 1, getPalette([XieBoPalett]))
+            newModelingModules.splice(19, 1, getPalette([XieBoPalett, ConditionPalett]))
             newModelingModules.splice(8, 1, getContextPad([XieBoPalett]))
 
             // bpmn挂载到DOM上初始化
@@ -67,9 +69,8 @@ const ReactBpmn = (props) => {
             //     console.log('element', event.element, ' changed')
             // })
 
-            bindShapeAdded({
-                modeler: bpmnModeler.current
-            })
+            bindShapeAdded({ modeler: bpmnModeler.current })
+            
 
             bpmnModeler.current.on('element.click', (event) => {
                 const { element } = event
@@ -119,6 +120,7 @@ const ReactBpmn = (props) => {
                 taskElesIds.push(item.dataset.elementId)
             }
         })
+        window.bpmnModeler = bpmnModeler.current
         if (taskElesIds.length === 0) {
             alert('没有可高亮的执行流程组件')
             return
@@ -154,6 +156,17 @@ const ReactBpmn = (props) => {
         }
     }
 
+    const handleAutoAdd = () => {
+        const elementFactory = bpmnModeler.current.get('elementFactory')
+        const elementRegistry = bpmnModeler.current.get('elementRegistry')
+        const autoPlace = bpmnModeler.current.get('autoPlace')
+
+        const newTaskShape = elementFactory.createShape({ type: 'bpmn:ServiceTask' })
+        const [rootShape, startShape] = elementRegistry.getAll()
+
+        autoPlace.append(startShape, newTaskShape)
+    }
+
     return (
         <Container>
             {/* test button */}
@@ -167,12 +180,15 @@ const ReactBpmn = (props) => {
                 <button className="print" onClick={highLight}>
                     高亮流程控件
                 </button>
+                <button className="print" onClick={handleAutoAdd}>
+                    自动添加
+                </button>
             </div>
 
             <div id="container" className="canvas" ref={canvasDom} />
 
             {/* 加上className为了获得颜色变量  */}
-            {/* {!!Object.entries(editDatas).length &&
+            {!!Object.entries(editDatas).length &&
                 (<PropertiesPanel
                     className="djs-container"
                 >
@@ -189,7 +205,7 @@ const ReactBpmn = (props) => {
                             />
                         </div>
                     ))}
-                </PropertiesPanel>)} */}
+                </PropertiesPanel>)}
         </Container >
     )
 }

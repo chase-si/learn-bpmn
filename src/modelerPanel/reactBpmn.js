@@ -157,16 +157,14 @@ const ReactBpmn = (props) => {
     }
 
     const handleAutoAdd = () => {
-        window.bpmnModeler = bpmnModeler.current
-
-        window.elementFactory = bpmnModeler.current.get('elementFactory')
-        window.elementRegistry = bpmnModeler.current.get('elementRegistry')
+        const elementFactory = bpmnModeler.current.get('elementFactory')
+        const elementRegistry = bpmnModeler.current.get('elementRegistry')
         const autoPlace = bpmnModeler.current.get('autoPlace')
 
-        // const newTaskShape = elementFactory.createShape({ type: 'bpmn:ServiceTask' })
-        // const [rootShape, startShape] = elementRegistry.getAll()
+        const newTaskShape = elementFactory.createShape({ type: 'bpmn:ServiceTask' })
+        const [rootShape, startShape] = elementRegistry.getAll()
 
-        // autoPlace.append(startShape, newTaskShape)
+        autoPlace.append(startShape, newTaskShape)
     }
 
     return (

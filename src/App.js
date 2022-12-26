@@ -2,10 +2,11 @@ import React, { useState } from "react";
 
 import BasicBpmn from './demos/basicBpmn'
 import ModelerBpmn from './demos/modeler'
-import ModelerPanelBpmn from './demos/modelerPanel'
+import ModelerPanelOverWrite from './demos/modelerPanelOverWrite'
 import ModelerCustom from './demos/modelerCustom'
 import ModelerCustomOverWrite from './demos/modelerCustomOverWrite'
 import ModelerPanelDemo from './demos/modelerPanel'
+import ModelerAutoAdd from './demos/modelerAutoAdd'
 import DevelopDemo from './modelerPanel'
 
 const ROUTERS = [{
@@ -25,9 +26,12 @@ const ROUTERS = [{
 	component: () => <ModelerCustomOverWrite />
 }, {
 	name: '带可编辑demo',
-	component: () => <ModelerPanelBpmn />
+	component: () => <ModelerPanelOverWrite />
+},  {
+	name: '自动添加组件',
+	component: () => <ModelerAutoAdd />
 }, {
-	name: '开发demo',
+	name: '自定义条件组件',
 	component: () => <DevelopDemo />
 }]
 

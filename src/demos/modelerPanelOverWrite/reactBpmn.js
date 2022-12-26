@@ -4,7 +4,7 @@ import Viewer from 'bpmn-js/lib/Viewer'
 
 import getPalette from '../../custom/newPalettProvider'
 import getContextPad from '../../custom/newContextPad'
-import { bindShapeAdded, bindImportDone } from '../../utils/utils'
+import { bindShapeAdded, bindImportDone } from '../../utils/eventBind'
 import { XieBoPalett } from './constants'
 import { Container, PropertiesPanel } from './style'
 

@@ -224,3 +224,21 @@ Modeler.prototype._modelingModules = [
 ```
 
 这个文件的在原来的代码库里相关引用比较多, 没法像上面的`PaletteModule`和`ContextPadModule`两个模块一样拖出来重写, 所以用了`patch-package`直接覆盖修改了node_modules包里的几行代码.
+
+
+## patch-package使用简介
+1.  安装
+```
+yarn add patch-package
+```
+2. 修改`bpmn-js`为锁定版本, 重新安装一个固定版本
+```
+yarn remove bpmn-js
+yarn add bpmn-js@10.3.0
+```
+3. .  到node_modules里修改想要改的代码
+4.  改完之后yarn patch-package `${对应修改的代码在的包}`, 此处如果是修改自动布局位置, 应该跑
+```
+yarn patch-package bpmn-js
+```
+1.  跑完之后发现会生成一个`/patches`文件夹, 里面记录了你修改的代码, 这样别人在安装你的项目时, 会自动读这个修改, 同步覆盖到他的`node_modules`下
