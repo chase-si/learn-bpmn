@@ -76,6 +76,37 @@ export const bindShapeAdded = ({
                     // }, 200)
                 }
 
+                // 自定义的条件组件, 自动带俩subProcess出现
+                // if (target.type === 'bpmn:ParallelGateway') {
+                //     const elementFactory = modeler.get('elementFactory')
+                //     const elementRegistry = modeler.get('elementRegistry')
+                //     const autoPlace = modeler.get('autoPlace')
+
+                //     const newTaskShape = elementFactory.createShape({
+                //         type: 'bpmn:SubProcess',
+                //         isExpanded: true,
+                //         rcProperties: [{
+                //             key: 'name',
+                //             value: 'true'
+                //         }]
+                //     })
+                //     const newTaskShape2 = elementFactory.createShape({
+                //         type: 'bpmn:SubProcess',
+                //         isExpanded: true,
+                //         rcProperties: [{
+                //             key: 'name',
+                //             value: 'false'
+                //         }]
+                //     })
+                //     const [rootShape, startShape] = elementRegistry.getAll()
+
+                //     autoPlace.append(target, newTaskShape)
+
+                //     setTimeout(() => {
+                //         autoPlace.append(target, newTaskShape2)
+                //     }, 200)
+                // }
+
             }, 200) // 加200延迟, 让shaped add结束后再绑定属性
         },
         failerCallback
